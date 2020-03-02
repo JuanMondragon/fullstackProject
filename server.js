@@ -15,9 +15,14 @@ const db = mongoose.connection
 db.on('error', error => console.error(error))
 db.once('open', () => console.log("connected to mongoose"))
 
+//!import the bodyParser libary
+
+const bodyParser= require('body-parser')
+
 //!import our router to the server file './' just means relative to this folder 
 
 const indexRouter = require('./routes/index')
+const authorRouter = require('./routes/authors')
 
 //! setting up the view engine , ejs is our engine
 app.set('view engine', 'ejs')
@@ -31,8 +36,13 @@ app.use(expressLayouts)
 //!our public files , css,js, imgs
 app.use(express.static('public'))
 
+//! app use the parser
+app.use(bodyParser.urlencoded({ limit: '10mb', extended : false}))
+
 //! telling out router which route to use
 app.use('/', indexRouter)
+//! every route will be prepended with "./authors"
+app.use('/authors', authorRouter)
 
 //! heroku port listen
 
